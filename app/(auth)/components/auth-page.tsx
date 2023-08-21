@@ -66,7 +66,7 @@ const AuthPage: React.FC<AuthPageProps> = async ({ page, searchParams }) => {
     <section className="w-full sm:max-w-md lg:max-w-4xl xl:max-w-5xl flex flex-col py-8">
       <Card
         className={cn(
-          'rounded-none sm:rounded-md flex lg:rounded-xl items-stretch p-3 gap-3',
+          'rounded-none sm:rounded-md flex lg:rounded-xl items-stretch p-3 gap-3 bg-background/95 backdrop-blur-sm',
           page === 'LOGIN' || 'flex-row-reverse'
         )}
       >
