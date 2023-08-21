@@ -10,19 +10,30 @@ import { MdAlternateEmail } from 'react-icons/md'
 import { TbFingerprint, TbFingerprintOff } from 'react-icons/tb'
 import { useState } from 'react'
 import Link from 'next/link'
+import { cn } from '@/lib/utils'
+
+import { BarLoader as Spinner } from 'react-spinners'
 
 interface AuthFormProps {
   formSchema: z.Schema
+  page: 'LOGIN' | 'REGISTER' | 'RESET'
+  onSubmit: (value: any) => void
+  disabled: boolean
+  btnLabel: string
+  fields: {
+    username?: boolean
+    name?: boolean
+    email?: boolean
+    password?: boolean
+    confirmPassword?: boolean
+  }
   initialData: {
     username?: string
     name?: string
     email?: string
-    password: string
+    password?: string
     confirmPassword?: string
   }
-  page: 'LOGIN' | 'REGISTER'
-  onSubmit: (value: any) => void
-  disabled: boolean
 }
 
 const AuthForm: React.FC<AuthFormProps> = ({
@@ -31,6 +42,8 @@ const AuthForm: React.FC<AuthFormProps> = ({
   onSubmit,
   disabled,
   page,
+  btnLabel,
+  fields,
 }) => {
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -59,44 +72,45 @@ const AuthForm: React.FC<AuthFormProps> = ({
         onSubmit={form.handleSubmit(onSubmit)}
         className="flex flex-col gap-2"
       >
-        {page === 'REGISTER' && (
-          <>
-            <AuthInput
-              control={form.control}
-              placeholder="Name"
-              name="name"
-              icon={FiUser}
-              disabled={disabled}
-            />
-
-            <AuthInput
-              control={form.control}
-              placeholder="Email"
-              name="email"
-              type="email"
-              icon={MdAlternateEmail}
-              disabled={disabled}
-            />
-          </>
-        )}
-        {page === 'LOGIN' && (
+        {fields.name && (
           <AuthInput
             control={form.control}
-            placeholder="Email or Username"
+            placeholder="Name"
+            name="name"
+            icon={FiUser}
+            disabled={disabled}
+          />
+        )}
+        {fields.email && (
+          <AuthInput
+            control={form.control}
+            placeholder="Email"
+            name="email"
+            type="email"
+            icon={MdAlternateEmail}
+            disabled={disabled}
+          />
+        )}
+        {fields.username && (
+          <AuthInput
+            control={form.control}
+            placeholder={page === 'LOGIN' ? 'Email or Username' : 'Username'}
             name="username"
             icon={FiUser}
             disabled={disabled}
           />
         )}
-        <AuthInput
-          control={form.control}
-          placeholder="Password"
-          name="password"
-          type={showPass ? 'text' : 'password'}
-          icon={showPass ? TbFingerprintOff : TbFingerprint}
-          iconClick={() => setShowPass((current) => !current)}
-          disabled={disabled}
-        />
+        {fields.password && (
+          <AuthInput
+            control={form.control}
+            placeholder="Password"
+            name="password"
+            type={showPass ? 'text' : 'password'}
+            icon={showPass ? TbFingerprintOff : TbFingerprint}
+            iconClick={() => setShowPass((current) => !current)}
+            disabled={disabled}
+          />
+        )}
         {page === 'LOGIN' && (
           <div className="flex justify-end">
             <Link
@@ -107,7 +121,7 @@ const AuthForm: React.FC<AuthFormProps> = ({
             </Link>
           </div>
         )}
-        {page === 'REGISTER' && (
+        {fields.confirmPassword && (
           <AuthInput
             control={form.control}
             placeholder="Confirm Password"
@@ -121,10 +135,20 @@ const AuthForm: React.FC<AuthFormProps> = ({
         )}
         <Button
           disabled={disabled}
-          className="mt-6 w-full"
+          className="mt-6 w-full relative"
           type="submit"
         >
-          {page === 'REGISTER' ? 'Register' : 'Login'}
+          {disabled && (
+            <span className="absolute inset-0 flex items-center justify-center">
+              <Spinner
+                className=""
+                color="white"
+              />
+            </span>
+          )}
+          <span className={cn('transition', disabled && 'opacity-0 relative')}>
+            {btnLabel}
+          </span>
         </Button>
       </form>
     </Form>

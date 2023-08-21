@@ -20,7 +20,7 @@ const SocialAuthButton: React.FC<SocialAuthButtonProps> = ({
     <Button
       onClick={() => onClick()}
       className={cn(
-        'flex gap-2 w-full shadow transition hover:shadow-md text-muted-foreground',
+        'flex gap-2 w-full shadow transition hover:shadow-md text-muted-foreground bg-background/95',
         bgColor && bgColor === 'fb' && 'hover:bg-[#4267B2] hover:text-white',
         bgColor && bgColor === 'google' && 'hover:bg-[#DB4437] hover:text-white'
       )}

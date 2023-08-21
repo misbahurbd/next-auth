@@ -37,7 +37,7 @@ const AuthInput: React.FC<AuthInputProps> = ({
           <FormControl>
             <div className="relative group">
               <Input
-                className="pr-8 placeholder:text-muted-foreground/60 transition"
+                className="pr-8 placeholder:text-muted-foreground/60 transition bg-background/95"
                 {...field}
                 placeholder={placeholder}
                 type={type}

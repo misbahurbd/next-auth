@@ -1,20 +1,29 @@
 import { Metadata } from 'next'
 import AuthPage from '../../components/auth-page'
 
-export const metadata: Metadata = {
-  title: 'Reset Password - Next Auth',
-  description: 'Reset your password and get your account access back.',
-}
-
-const ResetPasswordPage = ({
+export function generateMetadata({
   searchParams,
 }: {
-  searchParams: { token: string }
+  searchParams: {
+    token?: string
+  }
+}) {
+  return {
+    title: searchParams.token ? 'Change your password' : 'Reset your password',
+  }
+}
+
+const ResetPasswordPage = async ({
+  searchParams,
+}: {
+  searchParams?: {
+    token: string
+  }
 }) => {
   return (
     <AuthPage
       page="RESET"
-      token={searchParams.token}
+      searchParams={searchParams}
     />
   )
 }

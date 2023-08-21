@@ -1,8 +1,11 @@
 'use client'
 
 import * as z from 'zod'
-import AuthForm from './AuthForm'
+import AuthForm from '@/app/(auth)/components/form/auth-form'
 import { useState } from 'react'
+import axios from 'axios'
+import { toast } from '@/components/ui/use-toast'
+import { useRouter } from 'next/navigation'
 
 const formSchema = z.object({
   name: z.string().min(1, { message: 'Name is required' }),
@@ -32,10 +35,26 @@ const initialData = {
 }
 
 const RegistrationForm = () => {
+  const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
 
-  const onSubmit = (value: z.infer<typeof formSchema>) => {
-    console.log(value)
+  const onSubmit = async (value: z.infer<typeof formSchema>) => {
+    setIsLoading(true)
+    try {
+      await axios.post('/api/auth/register', value)
+      toast({
+        description: 'Account created successfully',
+      })
+      router.refresh()
+      router.push('/login')
+    } catch (error: any) {
+      toast({
+        variant: 'destructive',
+        description: error.response.data || 'Something went wrong',
+      })
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
@@ -45,6 +64,13 @@ const RegistrationForm = () => {
       initialData={initialData}
       onSubmit={onSubmit}
       disabled={isLoading}
+      btnLabel="Register"
+      fields={{
+        email: true,
+        name: true,
+        password: true,
+        confirmPassword: true,
+      }}
     />
   )
 }

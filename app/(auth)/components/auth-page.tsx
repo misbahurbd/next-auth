@@ -1,3 +1,7 @@
+import Link from 'next/link'
+import Image from 'next/image'
+import { cn } from '@/lib/utils'
+
 import {
   Card,
   CardContent,
@@ -6,22 +10,23 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import RegistrationForm from '@/app/(auth)/components/registration-form'
 import { Separator } from '@/components/ui/separator'
+
 import SocialAuth from '@/app/(auth)/components/social-auth'
-import Link from 'next/link'
-import Image from 'next/image'
-import { cn } from '@/lib/utils'
-import LoginForm from './login-form'
-import ResetPasswordFormPage from './reset-password-form'
-import { getTokenVerify } from '@/helpers/get-token-verify'
+
+import RegistrationForm from '@/app/(auth)/components/pages/registration-page'
+import LoginForm from '@/app/(auth)/components/pages/login-page'
+import ResetPasswordFormPage from './pages/reset-password-page'
+import ChangePasswordFormPage from './pages/change-password-page'
 
 interface AuthPageProps {
-  token?: string
   page: 'LOGIN' | 'REGISTER' | 'RESET'
+  searchParams?: {
+    token: string
+  }
 }
 
-const AuthPage: React.FC<AuthPageProps> = async ({ page, token }) => {
+const AuthPage: React.FC<AuthPageProps> = async ({ page, searchParams }) => {
   const images = [
     'cricket-ai-bg.jpg',
     'cricket-illustration.jpeg',
@@ -31,21 +36,26 @@ const AuthPage: React.FC<AuthPageProps> = async ({ page, token }) => {
   ]
 
   if (page === 'RESET') {
-    const checkToken = await getTokenVerify(token)
-
+    const token = searchParams?.token
     return (
       <section className="w-full sm:max-w-md py-8">
         <Card className="rounded-none sm:rounded-xl p-3">
           <CardHeader>
             <CardTitle className="text-lg sm:text-xl lg:text-2xl">
-              Find Your Account
+              {token ? 'Change your password' : 'Reset your password'}
             </CardTitle>
             <CardDescription>
-              Please enter your email address to find your account.
+              {token
+                ? 'Create new password to access your account'
+                : 'Please enter your email address to find your account.'}
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <ResetPasswordFormPage token={token} />
+            {token ? (
+              <ChangePasswordFormPage token={searchParams.token} />
+            ) : (
+              <ResetPasswordFormPage />
+            )}
           </CardContent>
         </Card>
       </section>
@@ -75,15 +85,12 @@ const AuthPage: React.FC<AuthPageProps> = async ({ page, token }) => {
             {page === 'REGISTER' ? <RegistrationForm /> : <LoginForm />}
           </CardContent>
           <CardFooter className="flex flex-col gap-5">
-            <div className="w-full relative">
-              <div className="absolute inset-0 flex items-center">
-                <Separator />
-              </div>
-              <div className="relative flex justify-center">
-                <span className="px-2 bg-background text-muted-foreground">
-                  or continue with
-                </span>
-              </div>
+            <div className="w-full relative flex items-center">
+              <Separator className="flex-1" />
+              <span className="px-2 bg-background/85  text-muted-foreground">
+                or continue with
+              </span>
+              <Separator className="flex-1" />
             </div>
             <div className="flex gap-3 w-full">
               <SocialAuth />

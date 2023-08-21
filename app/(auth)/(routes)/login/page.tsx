@@ -1,5 +1,5 @@
 import { Metadata } from 'next'
-import AuthPage from '../../components/auth-page'
+import AuthPage from '@/app/(auth)/components/auth-page'
 
 export const metadata: Metadata = {
   title: 'Login - Next Auth',
