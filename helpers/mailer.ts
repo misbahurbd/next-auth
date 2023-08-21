@@ -33,15 +33,15 @@ export const sendEmail = async ({
     })
 
     const transporter = nodemailer.createTransport({
-      service: 'gmail',
+      service: process.env.MAILER_PROVIDER,
       auth: {
-        user: 'misbahurbd@gmail.com',
-        pass: 'idlbrthvftqvxxpu',
+        user: process.env.MAILER_USER_ID,
+        pass: process.env.MAILER_PASS,
       },
     })
 
     const mailOptions = {
-      from: 'misbahurbd@gmail.com',
+      from: process.env.MAILER_USER_ID,
       to: email,
       subject:
         emailType === 'verify' ? 'Verify your email' : 'Reset your password',
